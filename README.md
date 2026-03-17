@@ -64,3 +64,4 @@ A premium, role-based gym management platform featuring glassmorphism UI, real-t
 ## License
 
 The Titan Gym System is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# system-gym
