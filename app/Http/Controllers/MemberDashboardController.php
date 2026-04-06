@@ -2,32 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-use Illuminate\Support\Facades\Auth;
-use App\Models\GymClass;
-use App\Models\Membership;
-use App\Models\Booking;
- 
 class MemberDashboardController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $user = Auth::user();
-        $membership = $user->membership()->with('package')->first();
+        $user = auth()->user();
         
-        $activeClasses = GymClass::with('trainer')
-            ->where('status', 'scheduled')
-            ->latest()
-            ->take(3)
-            ->get();
-            
-        $myBookings = Booking::where('user_id', $user->id)
-            ->with('gymClass.trainer')
-            ->latest()
-            ->take(5)
-            ->get();
+        $stats = [
+            'total' => $user->digitalData()->count(),
+            'pending' => $user->digitalData()->where('status', 'pending')->count(),
+            'verified' => $user->digitalData()->where('status', 'verified')->count(),
+        ];
 
-        return view('member.dashboard', compact('user', 'membership', 'activeClasses', 'myBookings'));
+        $recentData = $user->digitalData()->with('program')->latest()->take(5)->get();
+
+        return view('member.dashboard', compact('stats', 'recentData'));
     }
 }

@@ -11,26 +11,43 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberDashboardController;
  
- Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('home');
- 
- Route::middleware(['auth', 'verified'])->group(function () {
-     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-     
-    Route::middleware(['role:member'])->prefix('member')->name('member.')->group(function () {
-        Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/bookings', [App\Http\Controllers\BookingController::class, 'index'])->name('bookings.index');
-        Route::post('/bookings', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+use App\Http\Controllers\DigitalDataController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+
+Route::get('/', function () {
+    $programs = \App\Models\Program::all();
+    return view('welcome', compact('programs'));
+})->name('home');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('member.dashboard');
+    })->name('dashboard');
+
+    // Operator Dashboard
+    Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
+        ->middleware(['role:member'])
+        ->name('member.dashboard');
+
+    // Admin Routes
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/admin/data', [AdminDashboardController::class, 'list'])->name('admin.list');
+        Route::patch('/admin/data/{digitalDatum}/status', [AdminDashboardController::class, 'updateStatus'])->name('admin.data.update-status');
+        Route::get('/admin/report', [AdminDashboardController::class, 'report'])->name('admin.report');
     });
- 
-     Route::resource('packages', PackageController::class);
-     Route::resource('members', MemberController::class);
-     Route::resource('trainers', TrainerController::class);
-     Route::resource('gym-classes', GymClassController::class);
-     Route::resource('check-ins', CheckInController::class);
- 
-     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
- });
+
+    // Field Operator Routes
+    Route::middleware(['role:member'])->group(function () {
+        Route::resource('digital-data', DigitalDataController::class);
+    });
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
  
  require __DIR__.'/auth.php';

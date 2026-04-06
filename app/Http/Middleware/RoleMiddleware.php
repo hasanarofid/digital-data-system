@@ -18,10 +18,14 @@
       */
      public function handle(Request $request, Closure $next, string $role): Response
      {
-         if (!$request->user() || $request->user()->role !== $role) {
-             abort(403, 'Unauthorized action.');
+         if (!$request->user()) {
+             abort(401);
          }
  
-         return $next($request);
+         if ($request->user()->role === 'admin' || $request->user()->role === $role) {
+             return $next($request);
+         }
+ 
+         abort(403, 'Unauthorized action.');
      }
  }

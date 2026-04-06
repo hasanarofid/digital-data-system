@@ -25,7 +25,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
             <div class="mb-8">
                 <a href="/">
-                    <h1 class="text-4xl font-black tracking-tighter text-accent">TITAN<span class="text-main">GYM</span></h1>
+                    <h1 class="text-4xl font-black tracking-tighter text-accent italic">DIGITAL<span class="text-main">DATA</span></h1>
                 </a>
             </div>
 
