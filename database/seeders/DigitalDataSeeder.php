@@ -7,6 +7,9 @@ use App\Models\Program;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\File;
 
 class DigitalDataSeeder extends Seeder
 {
@@ -26,6 +29,27 @@ class DigitalDataSeeder extends Seeder
         $regions = ['Surabaya', 'Sidoarjo', 'Gresik', 'Malang', 'Mojokerto', 'Pasuruan'];
         $occupations = ['PNS', 'Karyawan Swasta', 'Wiraswasta', 'Buruh', 'Mahasiswa', 'Ibu Rumah Tangga'];
         $photos = ['ktp_photos/dummy1.png', 'ktp_photos/dummy2.png', 'ktp_photos/dummy3.png'];
+
+        // Ensure directory and dummy images exist
+        if (!Storage::disk('public')->exists('ktp_photos')) {
+            Storage::disk('public')->makeDirectory('ktp_photos');
+        }
+
+        foreach ($photos as $index => $photo) {
+            if (!Storage::disk('public')->exists($photo)) {
+                try {
+                    $response = Http::get("https://placehold.co/600x400/png?text=Dummy+KTP+" . ($index + 1));
+                    if ($response->successful()) {
+                        Storage::disk('public')->put($photo, $response->body());
+                    } else {
+                        // Fallback: create a blank file if HTTP fails
+                        Storage::disk('public')->put($photo, '');
+                    }
+                } catch (\Exception $e) {
+                    Storage::disk('public')->put($photo, '');
+                }
+            }
+        }
 
         foreach ($names as $index => $name) {
             DigitalData::create([

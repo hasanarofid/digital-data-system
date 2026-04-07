@@ -12,7 +12,7 @@ class DigitalDataController extends Controller
 {
     public function index(): View
     {
-        $data = auth()->user()->digitalData()->with('program')->latest()->paginate(10);
+        $data = DigitalData::with(['user', 'program'])->latest()->paginate(10);
         return view('digital-data.index', compact('data'));
     }
 
@@ -52,11 +52,6 @@ class DigitalDataController extends Controller
 
     public function show(DigitalData $digitalDatum): View
     {
-        // Ensure user can only see their own data or is admin
-        if (auth()->user()->role !== 'admin' && $digitalDatum->user_id !== auth()->id()) {
-            abort(403);
-        }
-        
         return view('digital-data.show', ['item' => $digitalDatum]);
     }
 }
