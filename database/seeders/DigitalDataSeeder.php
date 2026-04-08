@@ -51,19 +51,27 @@ class DigitalDataSeeder extends Seeder
             }
         }
 
-        foreach ($names as $index => $name) {
+        $activities = [
+            'Pendataan Lansia', 'Penyuluhan Gizi', 'Pembagian Sembako',
+            'Cek Kesehatan Gratis', 'Pendaftaran UMKM', 'Survey Kepuasan Masyarakat',
+            'Pelatihan Digital Marketing', 'Sosialisasi Kebersihan Lingkungan'
+        ];
+
+        for ($i = 0; $i < 100; $i++) {
             DigitalData::create([
                 'user_id' => $fieldUser->id,
                 'program_id' => $programs->random()->id,
-                'name' => $name,
+                'name' => Arr::random($names) . ' ' . Arr::random(['A.', 'B.', 'C.', 'D.']),
                 'phone_number' => '08' . mt_rand(1000000000, 9999999999),
                 'region' => Arr::random($regions),
                 'occupation' => Arr::random($occupations),
-                'activity' => 'Pengisian data lapangan untuk ' . $programs->random()->name,
+                'activity' => Arr::random($activities),
                 'ktp_photo' => Arr::random($photos),
-                'status' => Arr::random(['pending', 'verified']),
+                'status' => Arr::random(['pending', 'verified', 'verified', 'pending']), // Bias towards verified for testing
                 'created_at' => now()->subDays(mt_rand(0, 30))->subHours(mt_rand(0, 23)),
+
             ]);
         }
     }
 }
+

@@ -61,14 +61,14 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="glass-card p-8">
-                        <h3 class="text-xs font-black text-main uppercase tracking-widest italic mb-8">Status Verifikasi</h3>
-                        <div class="h-[200px] relative">
-                            <canvas id="statusChart"></canvas>
+                        <h3 class="text-xs font-black text-main uppercase tracking-widest italic mb-8">Distribusi Pekerjaan</h3>
+                        <div class="h-[250px] relative">
+                            <canvas id="occupationChart"></canvas>
                         </div>
                     </div>
-                    <div class="glass-card p-8 flex flex-col justify-center">
-                        <h3 class="text-xs font-black text-main uppercase tracking-widest italic mb-6">Distribusi Wilayah</h3>
-                        <div class="space-y-5">
+                    <div class="glass-card p-8">
+                        <h3 class="text-xs font-black text-main uppercase tracking-widest italic mb-8">Distribusi Wilayah</h3>
+                        <div class="space-y-4 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
                             @foreach($dataByRegion as $region)
                             <div>
                                 <div class="flex justify-between text-[9px] uppercase font-bold tracking-widest mb-1.5">
@@ -83,6 +83,15 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Activity Distribution Chart -->
+                <div class="glass-card p-8">
+                    <h3 class="text-xs font-black text-main uppercase tracking-widest italic mb-8">Distribusi Kegiatan Lapangan</h3>
+                    <div class="h-[300px] relative">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Right: Recent Activity -->
@@ -136,7 +145,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const getColor = (variable) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+            const textMain = getColor('--text-main');
+            const textMuted = getColor('--text-muted');
+
             // Program Chart (Line)
+
             const programCtx = document.getElementById('programChart').getContext('2d');
             const programGradient = programCtx.createLinearGradient(0, 0, 0, 300);
             programGradient.addColorStop(0, 'rgba(52, 211, 153, 0.4)');
@@ -169,28 +183,30 @@
                         y: {
                             beginAtZero: true,
                             grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: 'rgba(255, 255, 255, 0.4)', font: { size: 10, weight: 'bold' } }
+                            ticks: { color: textMuted, font: { size: 10, weight: 'bold' } }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { color: 'rgba(255, 255, 255, 0.4)', font: { size: 10, weight: 'bold' } }
+                            ticks: { color: textMuted, font: { size: 10, weight: 'bold' } }
                         }
+
                     }
                 }
             });
 
-            // Status Chart (Doughnut)
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            new Chart(statusCtx, {
+
+
+            // Occupation Chart (Doughnut)
+            const occupationCtx = document.getElementById('occupationChart').getContext('2d');
+            new Chart(occupationCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Verified', 'Pending'],
+                    labels: {!! json_encode($dataByOccupation->pluck('occupation')) !!},
                     datasets: [{
-                        data: [
-                            {{ \App\Models\DigitalData::where('status', 'verified')->count() }},
-                            {{ \App\Models\DigitalData::where('status', 'pending')->count() }}
+                        data: {!! json_encode($dataByOccupation->pluck('count')) !!},
+                        backgroundColor: [
+                            '#34d399', '#60a5fa', '#fde047', '#f87171', '#a78bfa', '#fb923c'
                         ],
-                        backgroundColor: ['#10b981', '#f59e0b'],
                         borderWidth: 0,
                         hoverOffset: 15
                     }]
@@ -198,20 +214,56 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '75%',
+                    cutout: '70%',
                     plugins: {
                         legend: {
-                            position: 'bottom',
+                            position: 'right',
                             labels: {
-                                color: 'rgba(255, 255, 255, 0.6)',
+                                color: textMuted,
                                 font: { size: 9, weight: 'bold' },
                                 boxWidth: 10,
-                                padding: 20
+                                padding: 10
                             }
                         }
+
                     }
                 }
             });
+
+            // Activity Chart (Horizontal Bar)
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            new Chart(activityCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($dataByActivity->pluck('activity')) !!},
+                    datasets: [{
+                        label: 'Jumlah Partisipan',
+                        data: {!! json_encode($dataByActivity->pluck('count')) !!},
+                        backgroundColor: 'rgba(52, 211, 153, 0.8)',
+                        borderRadius: 8,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: textMuted, font: { size: 10, weight: 'bold' } }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: textMain, font: { size: 10, weight: 'bold' } }
+                        }
+
+                    }
+                }
+            });
+
         });
     </script>
     @endpush

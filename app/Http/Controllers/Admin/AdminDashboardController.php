@@ -22,13 +22,31 @@ class AdminDashboardController extends Controller
         $dataByRegion = DigitalData::selectRaw('region, count(*) as count')
             ->groupBy('region')
             ->orderBy('count', 'desc')
-            ->take(5)
+            ->get();
+
+        $dataByOccupation = DigitalData::selectRaw('occupation, count(*) as count')
+            ->groupBy('occupation')
+            ->orderBy('count', 'desc')
+            ->get();
+
+        $dataByActivity = DigitalData::selectRaw('activity, count(*) as count')
+            ->groupBy('activity')
+            ->orderBy('count', 'desc')
             ->get();
 
         $recentData = DigitalData::with(['user', 'program'])->latest()->take(10)->get();
 
-        return view('admin.dashboard', compact('totalData', 'totalPrograms', 'dataByProgram', 'dataByRegion', 'recentData'));
+        return view('admin.dashboard', compact(
+            'totalData', 
+            'totalPrograms', 
+            'dataByProgram', 
+            'dataByRegion', 
+            'dataByOccupation', 
+            'dataByActivity', 
+            'recentData'
+        ));
     }
+
 
     public function list()
     {
@@ -60,6 +78,14 @@ class AdminDashboardController extends Controller
 
     public function trackingInfo()
     {
-        return view('admin.info.tracking');
+        $programs = Program::withCount([
+            'digitalData as participants_count',
+            'digitalData as recipients_count' => function ($query) {
+                $query->where('status', 'verified');
+            }
+        ])->get();
+
+        return view('admin.info.tracking', compact('programs'));
     }
+
 }
