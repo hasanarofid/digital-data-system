@@ -21,12 +21,20 @@
             })();
         </script>
     </head>
-    <body class="font-sans antialiased text-main">
-        <div class="min-h-screen flex">
+    <body class="font-sans antialiased text-main" x-data="{ sidebarOpen: false }">
+        
+            <!-- Mobile Toggle -->
+            <button @click="sidebarOpen = !sidebarOpen" class="mobile-toggle lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <!-- Backdrop -->
+            <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"></div>
+
             @include('layouts.sidebar')
 
             <!-- Page Content -->
-            <main class="flex-1 ml-[260px] p-8">
+            <main class="flex-1 lg:ml-[260px] p-4 md:p-8">
                 @isset($header)
                     <header class="mb-8 animate-fade-in">
                         <div class="max-w-7xl mx-auto">

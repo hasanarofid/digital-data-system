@@ -57,6 +57,36 @@ body {
     position: fixed;
     transition: all 0.3s var(--transition);
     z-index: 50;
+    left: 0;
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}
+
+.mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 60;
+    padding: 0.75rem;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--accent);
+    backdrop-filter: blur(8px);
+}
+
+@media (max-width: 1024px) {
+    .mobile-toggle {
+        display: block;
+    }
 }
 
 .nav-link {

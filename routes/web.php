@@ -38,6 +38,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/admin/data', [AdminDashboardController::class, 'list'])->name('admin.list');
         Route::patch('/admin/data/{digitalDatum}/status', [AdminDashboardController::class, 'updateStatus'])->name('admin.data.update-status');
         Route::get('/admin/report', [AdminDashboardController::class, 'report'])->name('admin.report');
+        
+        // Informative Pages
+        Route::get('/admin/info/database', [AdminDashboardController::class, 'databaseInfo'])->name('admin.info.database');
+        Route::get('/admin/info/tracking', [AdminDashboardController::class, 'trackingInfo'])->name('admin.info.tracking');
     });
 
     // Field Operator Routes

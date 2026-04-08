@@ -67,16 +67,16 @@
                         </div>
                     </div>
                     <div class="glass-card p-8 flex flex-col justify-center">
-                        <h3 class="text-xs font-black text-main uppercase tracking-widest italic mb-6">Visualisasi Program</h3>
+                        <h3 class="text-xs font-black text-main uppercase tracking-widest italic mb-6">Distribusi Wilayah</h3>
                         <div class="space-y-5">
-                            @foreach($dataByProgram as $stat)
+                            @foreach($dataByRegion as $region)
                             <div>
                                 <div class="flex justify-between text-[9px] uppercase font-bold tracking-widest mb-1.5">
-                                    <span class="text-text-muted transition-colors hover:text-accent cursor-default">{{ $stat->program->name }}</span>
-                                    <span class="text-accent">{{ $stat->count }} Data</span>
+                                    <span class="text-text-muted">{{ $region->region }}</span>
+                                    <span class="text-accent">{{ $region->count }} Data</span>
                                 </div>
                                 <div class="w-full bg-glass h-1.5 rounded-full overflow-hidden">
-                                    <div class="bg-accent h-full rounded-full transition-all duration-1000" style="width: {{ ($stat->count / max($totalData, 1)) * 100 }}%"></div>
+                                    <div class="bg-accent h-full rounded-full" style="width: {{ ($region->count / max($totalData, 1)) * 100 }}%"></div>
                                 </div>
                             </div>
                             @endforeach

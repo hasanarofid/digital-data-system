@@ -19,9 +19,15 @@ class AdminDashboardController extends Controller
             ->groupBy('program_id')
             ->get();
 
+        $dataByRegion = DigitalData::selectRaw('region, count(*) as count')
+            ->groupBy('region')
+            ->orderBy('count', 'desc')
+            ->take(5)
+            ->get();
+
         $recentData = DigitalData::with(['user', 'program'])->latest()->take(10)->get();
 
-        return view('admin.dashboard', compact('totalData', 'totalPrograms', 'dataByProgram', 'recentData'));
+        return view('admin.dashboard', compact('totalData', 'totalPrograms', 'dataByProgram', 'dataByRegion', 'recentData'));
     }
 
     public function list()
@@ -45,5 +51,15 @@ class AdminDashboardController extends Controller
     {
         $data = DigitalData::with(['user', 'program'])->latest()->get();
         return view('admin.report', compact('data'));
+    }
+
+    public function databaseInfo()
+    {
+        return view('admin.info.database');
+    }
+
+    public function trackingInfo()
+    {
+        return view('admin.info.tracking');
     }
 }

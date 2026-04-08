@@ -1,4 +1,4 @@
-<aside class="sidebar flex flex-col">
+<aside class="sidebar flex flex-col" :class="sidebarOpen ? 'open' : ''">
     <div class="mb-10 px-4">
         <h1 class="text-2xl font-black tracking-tighter text-accent">DIGITAL<span class="text-main">DATA</span></h1>
         <p class="text-[10px] text-text-muted mt-1 uppercase tracking-widest">Field Collection System</p>
@@ -10,7 +10,29 @@
             Dashboard
         </a>
 
-        @if(auth()->user()->isAdmin())
+        @if(auth()->user()->role === 'admin')
+        <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Menu Sistem</div>
+        
+        <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            Digital Dashboard
+        </a>
+
+        <a href="{{ route('digital-data.create') }}" class="nav-link {{ request()->routeIs('digital-data.create') ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+            Sistem Input Data
+        </a>
+
+        <a href="{{ route('admin.info.database') }}" class="nav-link {{ request()->routeIs('admin.info.database') ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            Database Cloud
+        </a>
+
+        <a href="{{ route('admin.info.tracking') }}" class="nav-link {{ request()->routeIs('admin.info.tracking') ? 'active' : '' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Program Tracking
+        </a>
+
         <div class="mt-4 mb-2 px-4 text-[10px] uppercase tracking-widest text-text-muted font-bold">Admin Panel</div>
         <a href="{{ route('admin.list') }}" class="nav-link {{ request()->routeIs('admin.list') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87"></path><path d="M7 21v-2a4 4 0 0 1 3-3.87"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="19" cy="7" r="4"></circle></svg>

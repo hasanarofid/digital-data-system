@@ -15,6 +15,21 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if(auth()->user()->role === 'admin')
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                            {{ __('Digital Dashboard') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('digital-data.create')" :active="request()->routeIs('digital-data.create')">
+                            {{ __('Sistem Input Data') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.info.database')" :active="request()->routeIs('admin.info.database')">
+                            {{ __('Database Cloud') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.info.tracking')" :active="request()->routeIs('admin.info.tracking')">
+                            {{ __('Program Tracking') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -70,6 +85,21 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @if(auth()->user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    {{ __('Digital Dashboard') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('digital-data.create')" :active="request()->routeIs('digital-data.create')">
+                    {{ __('Sistem Input Data') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.info.database')" :active="request()->routeIs('admin.info.database')">
+                    {{ __('Database Cloud') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.info.tracking')" :active="request()->routeIs('admin.info.tracking')">
+                    {{ __('Program Tracking') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
